@@ -198,6 +198,7 @@
             <div class="hint" id="limitHint"></div>
           </div>
         </div>
+        <button id="adminLimitBtn" class="ghost" style="display:none; margin-top:12px"></button>
       </div>
 
       <div class="card">
@@ -315,6 +316,7 @@
     if (p.action === 'cancel_reminder') return 'Напоминание отменится';
     if (p.action === 'promo') return 'Промокод «' + p.code + '» отправится в бот';
     if (p.action === 'buy') return 'В Telegram откроется счёт на оплату';
+    if (p.action === 'toggle_admin_limit') return 'Режим лимита админа переключится';
     return 'Демо: ' + p.action;
   }
   function send(action, extra){
@@ -381,15 +383,34 @@
   var CIRC = 276.5;
   function paintRing(){
     var used = D.used || 0, lim = D.lim || 50, left = D.left != null ? D.left : Math.max(0, lim - used);
-    document.getElementById('leftNum').textContent = left;
-    document.getElementById('ringArc').style.strokeDashoffset =
-      String(CIRC * (1 - (lim ? Math.min(1, used / lim) : 0)));
-    document.getElementById('limitLine').textContent =
-      'Использовано ' + used + ' из ' + lim + (D.extra ? ' (+' + D.extra + ' куплено)' : '');
-    document.getElementById('limitHint').textContent = D.premium
-      ? 'Безлимит активен — дневной лимит не действует.'
-      : (left <= 0 ? 'Лимит исчерпан. Обновится в 00:00 по твоему поясу.'
-                   : 'Обновится в 00:00 по твоему поясу (' + (D.tz || 'Europe/Moscow') + ').');
+    var btn = document.getElementById('adminLimitBtn');
+    if (D.unlim) {
+      // админ в безлимите: сообщения не считаются — показываем это явно,
+      // а не «0 из 50», иначе выглядит как сломанный счётчик
+      document.getElementById('leftNum').textContent = '∞';
+      document.getElementById('ringArc').style.strokeDashoffset = '0';
+      document.getElementById('limitLine').textContent = 'Безлимит (админ)';
+      document.getElementById('limitHint').textContent =
+        'Сообщения не считаются — у админа нет лимита. Включи лимит кнопкой ниже, чтобы проверить счётчик.';
+      btn.style.display = '';
+      btn.textContent = 'Перейти на лимит';
+    } else {
+      document.getElementById('leftNum').textContent = left;
+      document.getElementById('ringArc').style.strokeDashoffset =
+        String(CIRC * (1 - (lim ? Math.min(1, used / lim) : 0)));
+      document.getElementById('limitLine').textContent =
+        'Использовано ' + used + ' из ' + lim + (D.extra ? ' (+' + D.extra + ' куплено)' : '');
+      document.getElementById('limitHint').textContent = D.premium
+        ? 'Безлимит активен — дневной лимит не действует.'
+        : (left <= 0 ? 'Лимит исчерпан. Обновится в 00:00 по твоему поясу.'
+                     : 'Обновится в 00:00 по твоему поясу (' + (D.tz || 'Europe/Moscow') + ').');
+      if (D.adm) {
+        btn.style.display = '';
+        btn.textContent = 'Вернуться к безлимиту';
+      } else {
+        btn.style.display = 'none';
+      }
+    }
     document.getElementById('resetTag').textContent = 'до 00:00: ' + untilMidnight();
   }
   function untilMidnight(){
@@ -569,6 +590,9 @@
     if (!code) { hap('error'); alert('Введи промокод'); return; }
     hap('success'); confetti();
     send('promo', {code: code});
+  };
+  document.getElementById('adminLimitBtn').onclick = function(){
+    hap('light'); send('toggle_admin_limit');
   };
 
   /* ---- настройки ---- */
