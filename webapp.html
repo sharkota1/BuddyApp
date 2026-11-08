@@ -461,6 +461,9 @@
         hap('light');
         var spec = window.prompt ? window.prompt('Новое время напоминания', r.at) : null;
         if (spec === null || !String(spec).trim()) return;
+        // оптимистично: показываем новое время сразу
+        r.at = String(spec).trim();
+        paintRem(); paintProfile();
         send('edit_reminder', {id: r.id, time: String(spec).trim()});
       };
       var del = document.createElement('button'); del.className = 'del'; del.textContent = '✕';
@@ -616,7 +619,13 @@
     send('promo', {code: code});
   };
   document.getElementById('adminLimitBtn').onclick = function(){
-    hap('light'); send('toggle_admin_limit');
+    hap('light');
+    // оптимистично: переключаем отображение сразу — иначе кажется,
+    // что кнопка ничего не делает (подтверждение приходит в чат,
+    // а приложение остаётся открытым)
+    D.unlim = !D.unlim;
+    paintRing();
+    send('toggle_admin_limit');
   };
 
   /* ---- настройки ---- */
