@@ -75,8 +75,8 @@
   input:focus,select:focus{border-color:var(--accent);}
   label{display:block; font-size:13px; color:var(--hint); margin:4px 0 6px;}
   /* ---- вкладки (низ) — плавающая капсула, как кнопка «Профиль» у Нейрона ---- */
-  .tabs{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(12px + env(safe-area-inset-bottom)); z-index:20;
-        width:min(560px, calc(100% - 24px)); display:flex;
+  .tabs{position:fixed; left:0; right:0; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:20;
+        width:calc(100% - 24px); max-width:560px; margin:0 auto; display:flex;
         background:var(--bg);
         background:color-mix(in srgb, var(--tg-theme-bg-color,#0f1115) 78%, transparent);
         backdrop-filter:blur(18px) saturate(1.4);
@@ -187,8 +187,8 @@
         <div class="ring-wrap">
           <div class="ring">
             <svg width="104" height="104" viewBox="0 0 104 104">
-              <circle cx="52" cy="52" r="44" fill="none" stroke="rgba(185,168,204,.25)" stroke-width="9"/>
-              <circle id="ringArc" cx="52" cy="52" r="44" fill="none" stroke-width="9"
+              <circle cx="52" cy="52" r="44" fill="none" stroke="rgba(185,168,204,.25)" stroke-width="10"/>
+              <circle id="ringArc" cx="52" cy="52" r="44" fill="none" stroke-width="10"
                       stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="0"/>
             </svg>
             <div class="rc"><b id="leftNum">—</b><span>осталось</span></div>
