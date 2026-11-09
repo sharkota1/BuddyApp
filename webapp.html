@@ -200,6 +200,8 @@
           </div>
         </div>
         <button id="adminLimitBtn" class="ghost" style="display:none; margin-top:12px"></button>
+        <button id="refreshBtn" class="ghost" style="margin-top:12px">↻ Обновить счётчик</button>
+        <div class="hint" style="margin-top:8px">Данные — на момент открытия приложения. Если писал боту после открытия, нажми «Обновить счётчик», и бот пришлёт свежую ссылку в чат.</div>
       </div>
 
       <div class="card">
@@ -626,6 +628,11 @@
     D.unlim = !D.unlim;
     paintRing();
     send('toggle_admin_limit');
+  };
+  document.getElementById('refreshBtn').onclick = function(){
+    hap('light');
+    send('refresh');
+    toast('Запросил свежие данные — смотри чат, там будет новая ссылка');
   };
 
   /* ---- настройки ---- */
