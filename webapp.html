@@ -405,8 +405,10 @@
       btn.textContent = 'Перейти на лимит';
     } else {
       document.getElementById('leftNum').textContent = left;
+      // Круг тратится вместе с лимитом: полный синий круг при полном
+      // лимите, дуга уменьшается по мере расхода сообщений.
       document.getElementById('ringArc').style.strokeDashoffset =
-        String(CIRC * (1 - (lim ? Math.min(1, used / lim) : 0)));
+        String(CIRC * (1 - (lim ? Math.min(1, left / lim) : 0)));
       document.getElementById('limitLine').textContent =
         'Использовано ' + used + ' из ' + lim + (D.extra ? ' (+' + D.extra + ' куплено)' : '');
       document.getElementById('limitHint').textContent = D.premium
